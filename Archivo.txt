@@ -1,0 +1,14 @@
+programa real leer haz default
+funcion cadena escribir mientras regresar
+vacio var si encaso ejecutar entero
+sino caso
+* / % + - =
+< <= > >= == !=
+! && ||
+; [ ] , : ( ) { }
+crear destruir almacenar procesar
+iniciar detener agregar quitar
+abrir cerrar mostrar ocultar
+probar cambiar verificar identificar
+configurar ejecutar_comando salir
+1 2 3 4 5

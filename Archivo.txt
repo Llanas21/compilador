@@ -1,14 +1,40 @@
-programa real leer haz default
-funcion cadena escribir mientras regresar
-vacio var si encaso ejecutar entero
-sino caso
-* / % + - =
-< <= > >= == !=
-! && ||
-; [ ] , : ( ) { }
-crear destruir almacenar procesar
-iniciar detener agregar quitar
-abrir cerrar mostrar ocultar
-probar cambiar verificar identificar
-configurar ejecutar_comando salir
-1 2 3 4 5
+programa miPrograma {
+    var entero a = 12345
+    var real b = 3.14
+    var cadena mensaje = "Hola, Mundo!"
+    var vacio
+
+    funcion entero suma(entero x, entero y) {
+        regresar x + y
+    }
+
+    leer(a)
+    escribir("El valor de a es: ", a)
+    si (a > 0) {
+        escribir("a es positivo")
+    } sino {
+        escribir("a no es positivo")
+    }
+
+    mientras (a <= 100) {
+        a = a + 1
+        escribir(a)
+    }
+
+    encaso (a) {
+        caso 1:
+            escribir("a es uno")
+            haz
+        caso 2:
+            escribir("a es dos")
+            haz
+        default:
+            escribir("a es otro valor")
+            haz
+    }
+
+    var entero resultado = suma(10, 20)
+    escribir("El resultado de la suma es: ", resultado)
+
+    // Este es un comentario
+}

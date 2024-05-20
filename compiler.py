@@ -1,4 +1,5 @@
 import re
+from tabulate import tabulate
 
 test = open("Archivo.txt", "r")
 lines = test.read().split(sep="\n")
@@ -64,10 +65,18 @@ characters = {
 class Token:
     def __init__(self, lexeme, tkn, pos, line):
         self.lexeme = lexeme
-        self.tk = tkn
+        self.tkn = tkn
         self.pos = pos
         self.line = line
 
+
+# Expresiones Regulares
+typed_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]+[&%$@]$")
+gral_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*$")
+
+int_const_patt = re.compile("^[+ | -]$")
+str_const_patt = re.compile('^"[a-zA-Z0-9]"$')
+comm_patt = re.compile("^//[a-zA-Z0-9]$")
 
 tokens = []
 
@@ -77,28 +86,40 @@ for i, line in enumerate(lines, start=1):
         if word in res_words:
             tkn = Token(lexeme=word, tkn=res_words.get(word), pos=-1, line=i)
             tokens.append(tkn)
-        if word in arithm_operators:
+        elif word in arithm_operators:
             tkn = Token(lexeme=word, tkn=arithm_operators.get(word), pos=-1, line=i)
             tokens.append(tkn)
-        if word in relat_operators:
+        elif word in relat_operators:
             tkn = Token(lexeme=word, tkn=relat_operators.get(word), pos=-1, line=i)
             tokens.append(tkn)
-        if word in log_operators:
+        elif word in log_operators:
             tkn = Token(lexeme=word, tkn=log_operators.get(word), pos=-1, line=i)
             tokens.append(tkn)
-        if word in characters:
+        elif word in characters:
             tkn = Token(lexeme=word, tkn=characters.get(word), pos=-1, line=i)
             tokens.append(tkn)
-        if int(word) in range(-32768, 32767):
-            int_const_regex = re.compile("^[+ | -]$")
+        elif typed_id_patt.fullmatch(word):
+            tkn = Token(lexeme=word, tkn=-91, pos=-2, line=i)
+            tokens.append(tkn)
+        elif gral_id_patt.fullmatch(word):
+            tkn = Token(lexeme=word, tkn=-92, pos=-1, line=i)
+            tokens.append(tkn)
+        elif str_const_patt.fullmatch(word):
+            tkn = Token(lexeme=word, tkn=-95, pos=-1, line=i)
+            tokens.append(tkn)
+        elif comm_patt.fullmatch(word):
+            tkn = Token(lexeme=word, tkn=-96, pos=-1, line=i)
+            tokens.append(tkn)
         else:
-            real_const_regex = re.compile("^[.]*$")
+            if int(word) in range(-32768, 32767):
+                tkn = Token(lexeme=word, tkn=-93, pos=-1, line=i)
+                tokens.append(tkn)
+            else:
+                tkn = Token(lexeme=word, tkn=-94, pos=-1, line=i)
+                tokens.append(tkn)
 
-        int_regex = re.compile("^[a-zA-Z][a-zA-Z0-9]*&$")
-        real_regex = re.compile("^[a-zA-Z][a-zA-Z0-9]*%$")
-        str_regex = re.compile("^[a-zA-Z][a-zA-Z0-9]*$$")
-        cl_meth_regex = re.compile("^[a-zA-Z][a-zA-Z0-9]*@$")
 
-        int_const_regex = re.compile("^[+ | -][]$")
-        str_const_regex = re.compile('^"[a-zA-Z0-9]"$')
-        comm_regex = re.compile("^//[a-zA-Z0-9]$")
+token_data = [[token.lexeme, token.tkn, token.pos, token.line] for token in tokens]
+headers = ["lexema", "tkn", "pos", "lin"]
+
+print(tabulate(token_data, headers=headers, tablefmt="grid"))

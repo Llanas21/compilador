@@ -1,40 +1,39 @@
-programa miPrograma {
-    var entero a = 12345
-    var real b = 3.14
-    var cadena mensaje = "Hola, Mundo!"
-    var vacio
+programa miPrograma@ {
+    var a& = 12345
+    var b% = 3.14
+    var mensaje$ = "Hola!"
 
-    funcion entero suma(entero x, entero y) {
-        regresar x + y
+    funcion suma@ ( x& , y& ) {
+        regresar x& + y&
     }
 
-    leer(a)
-    escribir("El valor de a es: ", a)
-    si (a > 0) {
-        escribir("a es positivo")
+    leer ( a& )
+    escribir ( "Valor:" , a& )
+    si ( a& > 0 ) {
+        escribir ( "Positivo" )
     } sino {
-        escribir("a no es positivo")
+        escribir ( "Negativo" )
     }
 
-    mientras (a <= 100) {
-        a = a + 1
-        escribir(a)
+    mientras ( a& <= 100 ) {
+        a& = a& + 1
+        escribir ( a& )
     }
 
-    encaso (a) {
-        caso 1:
-            escribir("a es uno")
+    encaso ( a& ) {
+        caso 1 :
+            escribir ( "Uno" )
             haz
-        caso 2:
-            escribir("a es dos")
+        caso 2 :
+            escribir ( "Dos" )
             haz
-        default:
-            escribir("a es otro valor")
+        default :
+            escribir ( "Otro" )
             haz
     }
 
-    var entero resultado = suma(10, 20)
-    escribir("El resultado de la suma es: ", resultado)
+    var resultado& = suma@ ( 10 , 20 )
+    escribir ( "Resultado:" , resultado& )
 
-    // Este es un comentario
+    //Comentario
 }

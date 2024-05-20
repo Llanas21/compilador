@@ -71,12 +71,12 @@ class Token:
 
 
 # Expresiones Regulares
-typed_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]+[&%$@]$")
+typed_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*[&%$@]$")
 gral_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*$")
 
 int_const_patt = re.compile("^[+ | -]$")
-str_const_patt = re.compile('^"[a-zA-Z0-9]"$')
-comm_patt = re.compile("^//[a-zA-Z0-9]$")
+str_const_patt = re.compile('^".*"$')
+comm_patt = re.compile("^//[a-zA-Z0-9]*$")
 
 tokens = []
 
@@ -111,7 +111,11 @@ for i, line in enumerate(lines, start=1):
             tkn = Token(lexeme=word, tkn=-96, pos=-1, line=i)
             tokens.append(tkn)
         else:
-            if int(word) in range(-32768, 32767):
+            try:
+                num = int(word)
+            except:
+                num = float(word)
+            if num in range(-32768, 32767):
                 tkn = Token(lexeme=word, tkn=-93, pos=-1, line=i)
                 tokens.append(tkn)
             else:

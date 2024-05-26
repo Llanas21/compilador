@@ -1,8 +1,8 @@
 import re
 from tabulate import tabulate
 
-test = open("Archivo.txt", "r")
-lines = test.read().split(sep="\n")
+file = open("archivo.txt", "r")
+lines = file.read().split(sep="\n")
 
 res_words = {
     "programa": -1,
@@ -61,6 +61,20 @@ characters = {
     "}": -59,
 }
 
+non_tkn = [
+    '"',
+    ".",
+    " ",
+    "\t",
+    "\n",
+]
+
+
+class badIdentifier(Exception):
+    def __init__(self, word):
+        self.word = word
+        super().__init__(f"Identificador no válido: {word}")
+
 
 class Token:
     def __init__(self, lexeme, tkn, pos, line):
@@ -71,9 +85,10 @@ class Token:
 
 
 # Expresiones Regulares
-typed_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*[&%$@]$")
-gral_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*$")
-
+int_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*&$")
+real_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*%$")
+str_id_patt = re.compile(r"^[a-zA-Z][a-zA-Z0-9]*\$$")
+cl_meth_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*@$")
 int_const_patt = re.compile("^[+ | -]$")
 str_const_patt = re.compile('^".*"$')
 comm_patt = re.compile("^//[a-zA-Z0-9]*$")
@@ -98,11 +113,17 @@ for i, line in enumerate(lines, start=1):
         elif word in characters:
             tkn = Token(lexeme=word, tkn=characters.get(word), pos=-1, line=i)
             tokens.append(tkn)
-        elif typed_id_patt.fullmatch(word):
+        elif int_id_patt.fullmatch(word):
             tkn = Token(lexeme=word, tkn=-91, pos=-2, line=i)
             tokens.append(tkn)
-        elif gral_id_patt.fullmatch(word):
-            tkn = Token(lexeme=word, tkn=-92, pos=-1, line=i)
+        elif real_id_patt.fullmatch(word):
+            tkn = Token(lexeme=word, tkn=-92, pos=-2, line=i)
+            tokens.append(tkn)
+        elif str_id_patt.fullmatch(word):
+            tkn = Token(lexeme=word, tkn=-93, pos=-2, line=i)
+            tokens.append(tkn)
+        elif cl_meth_id_patt.fullmatch(word):
+            tkn = Token(lexeme=word, tkn=-94, pos=-2, line=i)
             tokens.append(tkn)
         elif str_const_patt.fullmatch(word):
             tkn = Token(lexeme=word, tkn=-95, pos=-1, line=i)
@@ -110,20 +131,24 @@ for i, line in enumerate(lines, start=1):
         elif comm_patt.fullmatch(word):
             tkn = Token(lexeme=word, tkn=-96, pos=-1, line=i)
             tokens.append(tkn)
+        elif word in non_tkn:
+            pass
         else:
             try:
                 num = int(word)
-            except:
-                num = float(word)
-            if num in range(-32768, 32767):
-                tkn = Token(lexeme=word, tkn=-93, pos=-1, line=i)
+                tkn = Token(lexeme=word, tkn=-97, pos=-1, line=i)
                 tokens.append(tkn)
-            else:
-                tkn = Token(lexeme=word, tkn=-94, pos=-1, line=i)
-                tokens.append(tkn)
+            except ValueError:
+                try:
+                    num = float(word)
+                    tkn = Token(lexeme=word, tkn=-98, pos=-1, line=i)
+                    tokens.append(tkn)
+                except:
+                    raise badIdentifier(word=word)
 
 
 token_data = [[token.lexeme, token.tkn, token.pos, token.line] for token in tokens]
 headers = ["lexema", "tkn", "pos", "lin"]
 
-print(tabulate(token_data, headers=headers, tablefmt="grid"))
+file = open("tokens_table.txt", "w")
+file.write(tabulate(token_data, headers=headers, tablefmt="simple"))

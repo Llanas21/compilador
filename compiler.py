@@ -89,7 +89,6 @@ int_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*&$")
 real_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*%$")
 str_id_patt = re.compile(r"^[a-zA-Z][a-zA-Z0-9]*\$$")
 cl_meth_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*@$")
-int_const_patt = re.compile("^[+ | -]$")
 str_const_patt = re.compile('^".*"$')
 comm_patt = re.compile("^//[a-zA-Z0-9]*$")
 

@@ -1,7 +1,7 @@
 import re
 from tabulate import tabulate
 
-file = open("archivo.txt", "r")
+file = open("archivo_prueba.txt", "r")
 lines = file.read().split(sep="\n")
 
 res_words = {

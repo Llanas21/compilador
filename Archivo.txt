@@ -9,7 +9,7 @@ programa miPrograma@ {
 
     leer ( a& )
     escribir ( "Valor:" , a& )
-    si ( a& > 0 ) {
+    si ( && <= * + a& > 0 ) {
         escribir ( "Positivo" )
     } sino {
         escribir ( "Negativo" )

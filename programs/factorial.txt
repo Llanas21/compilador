@@ -1,0 +1,13 @@
+programa factorial@ {
+    var n& = 0 ;
+    var factorial& = 1 ;
+    leer ( n& ) ;
+    var i& = 1 ;
+
+    mientras ( i& <= n& ) {
+        factorial& = factorial& * i& ;
+        i& = i& + 1 ;
+    }
+    
+    escribir ( "Factorial_de" , n& , "es:" , factorial& ) ;
+}

@@ -1,0 +1,24 @@
+programa esPrimo@ {
+    var x& = 0 ;
+    var esPrimo% = 1 ;
+    leer ( x& ) ;
+
+    si ( x& <= 1 ) {
+        esPrimo% = 0 ;
+    } sino {
+        var i& = 2 ;
+        mientras ( i& <= x& / 2 ) {
+            si ( x& % i& == 0 ) {
+                esPrimo% = 0 ;
+                regresar ;
+            }
+            i& = i& + 1
+        }
+    }
+
+    si ( esPrimo% == 1 ) {
+        escribir ( x& , "es_un_número_primo" )
+    } sino {
+        escribir ( x& , "no_es_un_número_primo" )
+    }
+}

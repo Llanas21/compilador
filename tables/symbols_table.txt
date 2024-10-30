@@ -1,5 +1,0 @@
-id          tkn    value    d2    d1  ptr    scope
---------  -----  -------  ----  ----  -----  --------
-x&          -91        0     0     0         esPrimo@
-esPrimo%    -92        0     0     0         esPrimo@
-i&          -91        0     0     0         esPrimo@

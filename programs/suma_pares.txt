@@ -1,10 +1,7 @@
 programa sumaPares@ {
-    var n& ;
     var m& ;
     var suma& ;
-    n& = 0 ;
-    m& = 0 ;
-    suma& = 0 ;
+    suma& = 23.5 ;
     leer ( n& ) ;
     leer ( m& ) ;
 

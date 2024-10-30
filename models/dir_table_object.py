@@ -4,3 +4,10 @@ class DirTableObject:
         self.tkn = tkn
         self.line = line
         self.vci = vci
+
+
+def __repr__(self):
+    return (
+        f"DirTableObject(id={self.id}, tkn={self.tkn}, "
+        f"line={self.line}, vci={self.vci})"
+    )

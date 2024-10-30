@@ -1,12 +1,12 @@
-# import syntax
+import tkinter as tk
 
-import semantics
+from gui import GUI
 
 
 def main():
-    # syntax.generateTokensTable()
-    semantics.generateSymbolsTable()
-    semantics.generateDirectionsTable()
+    root = tk.Tk()
+    app = GUI(root)
+    root.mainloop()
 
 
 if __name__ == "__main__":

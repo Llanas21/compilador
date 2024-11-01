@@ -4,9 +4,10 @@ from models.token_class import TokenClass
 
 
 class InvalidIdentifierError(Exception):
-    def __init__(self, word):
+    def __init__(self, word, line):
         self.word = word
-        super().__init__(f"Identificador no válido: {word}")
+        self.line = line
+        super().__init__(f"Error en la línea {line}\nIdentificador no válido: {word}")
 
 
 class Lexicon:
@@ -82,6 +83,8 @@ class Lexicon:
         self.str_id_patt = re.compile(r"^[a-zA-Z][a-zA-Z0-9]*\$$")
         self.cl_meth_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*@$")
         self.str_const_patt = re.compile('^".*"$')
+        self.int_const_patt = re.compile("^[0-9]*")
+        self.real_const_patt = re.compile("^[0-9].[0-9]*")
         self.comm_patt = re.compile("^//[a-zA-Z0-9]*$")
 
         self.tokens = []
@@ -138,18 +141,14 @@ class Lexicon:
                     self.tokens.append(tkn)
                 elif word in self.non_tkn:
                     pass
+                elif self.int_const_patt.fullmatch(word):
+                    tkn = TokenClass(lexeme=word, tkn=-97, pos=-1, line=i)
+                    self.tokens.append(tkn)
+                elif self.real_const_patt.fullmatch(word):
+                    tkn = TokenClass(lexeme=word, tkn=-98, pos=-1, line=i)
+                    self.tokens.append(tkn)
                 else:
-                    try:
-                        num = int(word)
-                        tkn = TokenClass(lexeme=word, tkn=-97, pos=-1, line=i)
-                        self.tokens.append(tkn)
-                    except ValueError:
-                        try:
-                            num = float(word)
-                            tkn = TokenClass(lexeme=word, tkn=-98, pos=-1, line=i)
-                            self.tokens.append(tkn)
-                        except ValueError:
-                            raise InvalidIdentifierError(word=word)
+                    raise InvalidIdentifierError(word=word, line=i)
 
         token_data = [
             [token.lexeme, token.tkn, token.pos, token.line] for token in self.tokens

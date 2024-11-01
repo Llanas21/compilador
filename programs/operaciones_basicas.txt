@@ -1,0 +1,11 @@
+programa operacionesBasicas@ {
+	var A& = 0 ;
+	var B& = 0 ;
+	si ( A& == B& && A& + B& < 30 ) {
+		A& = 20 + 30 ;
+		B& = 10 - 8 / 2 ;
+	} sino {
+		A& = 30 - 20 ;
+		B& = 40 - A& * 3 ;
+	}
+}

@@ -4,18 +4,27 @@ from models.sym_table_object import SymTableObject
 from models.dir_table_object import DirTableObject
 
 
-class DuplicatedSymbolError(Exception):
-    def __init__(self, symbol_id, scope):
-        self.symbol_id = symbol_id
+class UndeclaredSymbolError(Exception):
+    def __init__(self, tkn, scope):
+        self.tkn = tkn
         self.scope = scope
         super().__init__(
-            f"Símbolo duplicado encontrado: '{symbol_id}' en el ámbito '{scope}'"
+            f"Error en la línea {tkn.line}\nSímbolo no inicializado encontrado: '{tkn.lexeme}' en el ámbito '{scope}'"
+        )
+
+
+class DuplicatedSymbolError(Exception):
+    def __init__(self, tkn, scope):
+        self.tkn = tkn
+        self.scope = scope
+        super().__init__(
+            f"Error en la línea {tkn.line}\nSímbolo duplicado encontrado: '{tkn.lexeme}' en el ámbito '{scope}'"
         )
 
 
 class TypeMismatchError(Exception):
-    def __init__(self, variable_id, expected_type, actual_type):
-        self.variable_id = variable_id
+    def __init__(self, tkn, expected_type, actual_type):
+        self.tkn = tkn
         self.expected_type = expected_type
         self.actual_type = actual_type
 
@@ -38,7 +47,7 @@ class TypeMismatchError(Exception):
             pass
 
         super().__init__(
-            f"Incompatibilidad de tipo para '{variable_id}': se esperaba {actual_type}, se obtuvo {expected_type}"
+            f"Error en la línea {tkn.line}\nIncompatibilidad de tipo para '{tkn.lexeme}': se esperaba {actual_type}, se obtuvo {expected_type}"
         )
 
 
@@ -49,6 +58,24 @@ class Semantics:
         self.scope = ""
         self.sym_table_objects = []
         self.dir_table_objects = []
+
+        self.arithm_operators = {
+            "*": -21,
+            "/": -22,
+            "%": -23,
+            "+": -24,
+            "-": -25,
+            "=": -26,
+        }
+
+        self.relat_operators = {
+            "<": -31,
+            "<=": -32,
+            ">": -33,
+            ">=": -34,
+            "==": -35,
+            "!=": -36,
+        }
 
     def get_tokens(self):
         tokens = []
@@ -80,10 +107,11 @@ class Semantics:
 
             if self.tokens[i].tkn == "-12":
                 if any(
-                    sym.id == self.tokens[i + 1].lexeme and sym.scope == self.scope
-                    for sym in self.sym_table_objects
+                    sym_table_object.id == self.tokens[i + 1].lexeme
+                    and sym_table_object.scope == self.scope
+                    for sym_table_object in self.sym_table_objects
                 ):
-                    raise DuplicatedSymbolError(self.tokens[i + 1].lexeme, self.scope)
+                    raise DuplicatedSymbolError(self.tokens[i + 1], self.scope)
 
                 sym_table_object = SymTableObject(
                     id=self.tokens[i + 1].lexeme,
@@ -96,25 +124,58 @@ class Semantics:
                 )
                 self.sym_table_objects.append(sym_table_object)
 
-            if self.tokens[i].tkn == "-26":
+            if self.tokens[i].tkn == "-54":
+                if any(
+                    sym_table_object.id == self.tokens[i + 1].lexeme
+                    and sym_table_object.scope == self.scope
+                    for sym_table_object in self.sym_table_objects
+                ):
+                    raise DuplicatedSymbolError(self.tokens[i + 1], self.scope)
+
+                sym_table_object = SymTableObject(
+                    id=self.tokens[i + 1].lexeme,
+                    tkn=self.tokens[i + 1].tkn,
+                    value=0,
+                    d1=0,
+                    d2=0,
+                    ptr=None,
+                    scope=self.scope,
+                )
+                self.sym_table_objects.append(sym_table_object)
+
+            if (
+                self.tokens[i].lexeme in self.arithm_operators
+                or self.tokens[i].lexeme in self.relat_operators
+            ):
+                if not any(
+                    self.tokens[i - 1].lexeme == sym_table_object.id
+                    and sym_table_object.scope == self.scope
+                    for sym_table_object in self.sym_table_objects
+                ):
+                    if self.tokens[i - 1].tkn not in ["-95", "-97", "-98"]:
+                        raise UndeclaredSymbolError(
+                            tkn=self.tokens[i - 1], scope=self.scope
+                        )
+                    else:
+                        pass
                 actual_type = self.tokens[i - 1].tkn
                 expected_type = self.tokens[i + 1].tkn
                 if actual_type != expected_type:
                     if actual_type == "-91" and expected_type != "-97":
                         raise TypeMismatchError(
-                            variable_id=self.tokens[i - 1].lexeme,
+                            tkn=self.tokens[i - 1],
                             expected_type=expected_type,
                             actual_type=actual_type,
                         )
                     elif actual_type == "-92" and expected_type != "-98":
                         raise TypeMismatchError(
-                            variable_id=self.tokens[i - 1].lexeme,
+                            tkn=self.tokens[i - 1],
                             expected_type=expected_type,
                             actual_type=actual_type,
                         )
                     elif actual_type == "-93" and expected_type != "-95":
                         raise TypeMismatchError(
-                            variable_id=self.tokens[i - 1].lexeme,
+                            tkn=self.tokens[i - 1],
                             expected_type=expected_type,
                             actual_type=actual_type,
                         )

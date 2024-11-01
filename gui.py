@@ -1,5 +1,10 @@
-from lexicon import Lexicon
-from semantics import Semantics, DuplicatedSymbolError, TypeMismatchError
+from lexicon import Lexicon, InvalidIdentifierError
+from semantics import (
+    Semantics,
+    DuplicatedSymbolError,
+    TypeMismatchError,
+    UndeclaredSymbolError,
+)
 import tkinter as tk
 from tkinter import filedialog, Menu, Text, Scrollbar, messagebox, END
 
@@ -25,14 +30,36 @@ class GUI:
 
         menu_file = Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="Archivo", menu=menu_file)
-        menu_file.add_command(label="Abrir", command=self.open_file)
+        menu_file.add_command(
+            label="Abrir", command=self.open_file, accelerator="Ctrl+O"
+        )
+        menu_file.add_command(
+            label="Guardar", command=self.save_file, accelerator="Ctrl+S"
+        )
         menu_file.add_separator()
-        menu_file.add_command(label="Salir", command=self.master.quit)
+        menu_file.add_command(
+            label="Salir", command=self.master.quit, accelerator="Ctrl+Q"
+        )
 
         menu_run = Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="Ejecutar", menu=menu_run)
-        menu_run.add_command(label="Ejecutar léxico", command=self.run_lexicon)
-        menu_run.add_command(label="Ejecutar semántica", command=self.run_semantics)
+        menu_run.add_command(
+            label="Ejecutar léxico", command=self.run_lexicon, accelerator="Ctrl+F1"
+        )
+        menu_run.add_command(
+            label="Ejecutar semántica",
+            command=self.run_semantics,
+            accelerator="Ctrl+F2",
+        )
+
+        self.master.bind_all("<Control-o>", lambda event: self.open_file())
+        self.master.bind_all("<Control-s>", lambda event: self.save_file())
+        self.master.bind_all("<Control-q>", lambda event: self.master.quit())
+        self.master.bind_all("<Control-O>", lambda event: self.open_file())
+        self.master.bind_all("<Control-S>", lambda event: self.save_file())
+        self.master.bind_all("<Control-F1>", lambda event: self.run_lexicon())
+        self.master.bind_all("<Control-F2>", lambda event: self.run_semantics())
+        self.master.bind_all("<Control-Q>", lambda event: self.master.quit())
 
     def open_file(self):
         file = filedialog.askopenfilename(
@@ -46,12 +73,25 @@ class GUI:
                 self.text_box.delete(1.0, END)
                 self.text_box.insert(END, content)
 
-    def run_lexicon(self):
+    def save_file(self):
         if self.current_file:
-            lexicon = Lexicon(file_path=self.current_file)
-            lexicon.generateTokensTable(
-                r"C:\Users\josel\Universidad\Lenguajes & Autómatas II\compilador\tables\tokens_table.txt"
-            )
+            with open(self.current_file, "w", encoding="utf-8") as f:
+                content = self.text_box.get(1.0, END)
+                f.write(content)
+            self.run_lexicon()
+        else:
+            messagebox.showwarning("Guardar", "No hay un archivo abierto para guardar.")
+
+    def run_lexicon(self):
+        try:
+            if self.current_file:
+                lexicon = Lexicon(file_path=self.current_file)
+                lexicon.generateTokensTable(
+                    r"C:\Users\josel\Universidad\Lenguajes & Autómatas II\compilador\tables\tokens_table.txt"
+                )
+            messagebox.showinfo("Éxito", "Análisis léxico completado sin errores")
+        except InvalidIdentifierError as e:
+            messagebox.showerror("Error Sintáctico", str(e))
 
     def run_semantics(self):
         try:
@@ -65,4 +105,6 @@ class GUI:
         except DuplicatedSymbolError as e:
             messagebox.showerror("Error Semántico", str(e))
         except TypeMismatchError as e:
+            messagebox.showerror("Error Semántico", str(e))
+        except UndeclaredSymbolError as e:
             messagebox.showerror("Error Semántico", str(e))

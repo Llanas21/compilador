@@ -1,24 +1,22 @@
-programa sumaPares@ {
-    var m& ;
-    var suma& ;
-    suma& = 23.5 ;
+programa sumaPares@ { 
+    var n% = 0.0 ;
+    var m% = 0.0 ;
+    var suma& = 0 + 78 ;
     leer ( n& ) ;
     leer ( m& ) ;
-
-    si ( n& > m& ) {
-        var temp& ;
-        temp& = n& ;
-        n& = m& ;
-        m& = temp& ;
-    }
-
-    mientras ( n& <= m& ) {
-        si ( n& % 2 == 0 ) {
-            suma& = suma& + n& ;
-        }
-
-        n& = n& + 1 ;
-    }
-
-    escribir ( "La_suma_de_los_números_pares_es:" , suma& ) ;
+    si ( n% > m% ) { 
+        var temp% = n% ;
+        n% = m% ;
+        m% = temp% ;
+    } 
+    
 }
+
+
+
+
+
+
+
+
+

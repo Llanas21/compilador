@@ -1,0 +1,8 @@
+programa convertirTemperatura@ { 
+    var celsius% = 0.0 ;
+    var fahrenheit% = 0 ; 
+    leer ( celsius% ) ;
+    fahrenheit% = ( celsius% * 9 / 5 ) + 32 ;
+    escribir ( fahrenheit% ) ;
+}
+

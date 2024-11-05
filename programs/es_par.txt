@@ -1,12 +1,13 @@
 programa esPar@ {
   var n& ;
-  n& = 0;
+  n& = 0 ;
 
-  leer ( &n ) ;
+  leer ( n& ) ;
 
-  si ( &n % 2 == 0 ) {
+  si ( n& % 2 == 0 ) {
     escribir ( "Es_un_numero_par" )
   } sino {
     escribir ( "No_es_un_numero_par" )
   }
 }
+

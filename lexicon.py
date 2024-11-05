@@ -84,7 +84,7 @@ class Lexicon:
         self.cl_meth_id_patt = re.compile("^[a-zA-Z][a-zA-Z0-9]*@$")
         self.str_const_patt = re.compile('^".*"$')
         self.int_const_patt = re.compile("^[0-9]*")
-        self.real_const_patt = re.compile("^[0-9].[0-9]*")
+        self.real_const_patt = re.compile("^[0-9]*.[0-9]*")
         self.comm_patt = re.compile("^//[a-zA-Z0-9]*$")
 
         self.tokens = []

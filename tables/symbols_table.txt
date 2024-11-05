@@ -1,6 +1,4 @@
-id       tkn    value    d2    d1  ptr    scope
------  -----  -------  ----  ----  -----  ----------
-n%       -92        0     0     0         sumaPares@
-m%       -92        0     0     0         sumaPares@
-suma&    -91        0     0     0         sumaPares@
-temp%    -92        0     0     0         sumaPares@
+id             tkn    value    d2    d1  ptr    scope
+-----------  -----  -------  ----  ----  -----  ---------------------
+celsius%       -92        0     0     0         convertirTemperatura@
+fahrenheit%    -92        0     0     0         convertirTemperatura@

@@ -47,7 +47,7 @@ class TypeMismatchError(Exception):
             pass
 
         super().__init__(
-            f"Error en la línea {tkn.line}\nIncompatibilidad de tipo para '{tkn.lexeme}': se esperaba {actual_type}, se obtuvo {expected_type}"
+            f"Error en la línea {tkn.line}\nIncompatibilidad de tipo para '{tkn.lexeme}': se esperaba {expected_type}, se obtuvo {actual_type}"
         )
 
 
@@ -76,6 +76,10 @@ class Semantics:
             "==": -35,
             "!=": -36,
         }
+
+        self.identifiers = ["-91", "-92", "-93"]
+
+        self.constants = ["-97", "-98", "-96"]
 
     def get_tokens(self):
         tokens = []
@@ -147,37 +151,85 @@ class Semantics:
                 self.tokens[i].lexeme in self.arithm_operators
                 or self.tokens[i].lexeme in self.relat_operators
             ):
+
                 if not any(
                     self.tokens[i - 1].lexeme == sym_table_object.id
                     and sym_table_object.scope == self.scope
                     for sym_table_object in self.sym_table_objects
                 ):
-                    if self.tokens[i - 1].tkn not in ["-95", "-97", "-98"]:
+                    if self.tokens[i - 1].tkn not in [
+                        "-95",
+                        "-97",
+                        "-98",
+                        "-56",
+                        "-57",
+                    ]:
                         raise UndeclaredSymbolError(
                             tkn=self.tokens[i - 1], scope=self.scope
                         )
                     else:
                         pass
-                actual_type = self.tokens[i - 1].tkn
-                expected_type = self.tokens[i + 1].tkn
-                if actual_type != expected_type:
-                    if actual_type == "-91" and expected_type != "-97":
+
+            if (
+                self.tokens[i].tkn in self.identifiers
+                or self.tokens[i].tkn in self.constants
+            ):
+                inline_tokens = [
+                    token
+                    for token in self.tokens
+                    if token.line == self.tokens[i].line
+                    and (token.tkn in self.identifiers or token.tkn in self.constants)
+                ]
+
+                if self.tokens[i].tkn == "-91" or self.tokens[i].tkn == "-97":
+                    mismatched_token = next(
+                        (
+                            token
+                            for token in inline_tokens
+                            if token.tkn != "-91" and token.tkn != "-97"
+                        ),
+                        None,
+                    )
+
+                    if mismatched_token is not None:
                         raise TypeMismatchError(
-                            tkn=self.tokens[i - 1],
-                            expected_type=expected_type,
-                            actual_type=actual_type,
+                            tkn=self.tokens[i],
+                            expected_type="-91",
+                            actual_type=mismatched_token.tkn,
                         )
-                    elif actual_type == "-92" and expected_type != "-98":
+
+                if self.tokens[i].tkn == "-92" or self.tokens[i].tkn == "-98":
+                    mismatched_token = next(
+                        (
+                            token
+                            for token in inline_tokens
+                            if token.tkn != "-92" and token.tkn != "-98"
+                        ),
+                        None,
+                    )
+
+                    if mismatched_token is not None:
                         raise TypeMismatchError(
-                            tkn=self.tokens[i - 1],
-                            expected_type=expected_type,
-                            actual_type=actual_type,
+                            tkn=self.tokens[i],
+                            expected_type="-92",
+                            actual_type=mismatched_token.tkn,
                         )
-                    elif actual_type == "-93" and expected_type != "-95":
+
+                if self.tokens[i].tkn == "-93" or self.tokens[i].tkn == "-96":
+                    mismatched_token = next(
+                        (
+                            token
+                            for token in inline_tokens
+                            if token.tkn != "-93" and token.tkn != "-96"
+                        ),
+                        None,
+                    )
+
+                    if mismatched_token is not None:
                         raise TypeMismatchError(
-                            tkn=self.tokens[i - 1],
-                            expected_type=expected_type,
-                            actual_type=actual_type,
+                            tkn=self.tokens[i],
+                            expected_type="-93",
+                            actual_type=mismatched_token.tkn,
                         )
 
         symbol_data = [

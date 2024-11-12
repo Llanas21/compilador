@@ -1,3 +1,2 @@
-id            tkn    line    vci
-----------  -----  ------  -----
-sumaPares@    -94       1      0
+id    tkn    line    vci
+----  -----  ------  -----

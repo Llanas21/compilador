@@ -77,6 +77,12 @@ class Semantics:
             "!=": -36,
         }
 
+        self.log_operators = {
+            "!": -41,
+            "&&": -42,
+            "||": -43,
+        }
+
         self.identifiers = ["-91", "-92", "-93"]
 
         self.constants = ["-97", "-98", "-96"]

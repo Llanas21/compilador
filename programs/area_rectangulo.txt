@@ -1,15 +1,10 @@
 programa areaRectamgulo@ { 
-    var base% = 0.0 ;
-    var altura% = 0.0 ;
-    var area% = 0.0 ;  
+    var base% ;
+    var altura% ;
+    var area% ;  
     leer ( base% ) ;
     leer ( altura% ) ;
 
     area% = base% * altura% ;
     escribir ( area% ) ;
 }
-
-
-
-
-

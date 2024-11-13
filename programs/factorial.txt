@@ -1,14 +1,13 @@
 programa factorial@ {
   var n& ;
-  n& = 0 ;
 
   var resultado& ;
-  resultado& = 1
+  resultado& = 1 ;
 
-  var i& = 1 ;
+  var i& ;
   i& = 1 ;
   
-  leer ( n& )
+  leer ( n& ) ;
 
   mientras ( i& <= n& ) {
     resultado& = resultado& * i& ;
@@ -17,3 +16,4 @@ programa factorial@ {
 
   escribir ( resultado& ) ;
 }
+

@@ -120,18 +120,49 @@ class IntermediateCode:
                     self.op_stack
                     and op_stack_object.priority <= self.op_stack[-1].priority
                 ):
-                    self.vci.append(self.op_stack.pop())
+                    self.vci.append(self.op_stack.pop().tkn)
                 self.op_stack.append(op_stack_object)
 
             if self.tokens[i].tkn == "-51":
                 while self.op_stack:
-                    self.vci.append(self.op_stack.pop())
+                    self.vci.append(self.op_stack.pop().tkn)
 
-        print(self.vci)
-        vci_data = [
-            [vci_object.tkn.lexeme, index] for index, vci_object in enumerate(self.vci)
-        ]
+            if self.tokens[i].tkn == "-13":
+                self.vci_if(i=i)
+
+        vci_data = [[token.lexeme, index] for index, token in enumerate(self.vci)]
 
         vci_headers = ["tkn", "pos"]
         with open(output_path + "vci.txt", "w") as file:
             file.write(tabulate(vci_data, headers=vci_headers, tablefmt="simple"))
+
+    def vci_if(self, i):
+        self.stat_stack.append(self.tokens[i])
+
+        for i in range(i, len(self.tokens)):
+            if self.tokens[i].tkn == "-56":
+                pass
+            if (
+                self.tokens[i].tkn in self.identifiers
+                or self.tokens[i].tkn in self.constants
+            ):
+                self.vci.append(self.tokens[i])
+            if (
+                self.tokens[i].lexeme in self.arithm_operators
+                or self.tokens[i].lexeme in self.relat_operators
+                or self.tokens[i].lexeme in self.log_operators
+            ):
+                op_stack_object = OpStackObject(
+                    tkn=self.tokens[i],
+                    priority=self.priorities_table.get(self.tokens[i].lexeme),
+                )
+
+                while (
+                    self.op_stack
+                    and op_stack_object.priority <= self.op_stack[-1].priority
+                ):
+                    self.vci.append(self.op_stack.pop().tkn)
+                self.op_stack.append(op_stack_object)
+
+            if self.tokens[i].tkn == "-57":
+                

@@ -9,7 +9,7 @@ class UndeclaredSymbolError(Exception):
         self.tkn = tkn
         self.scope = scope
         super().__init__(
-            f"Error en la línea {tkn.line}\nSímbolo no inicializado encontrado: '{tkn.lexeme}' en el ámbito '{scope}'"
+            f"Error en la línea {tkn.line}\nSímbolo no declarado encontrado: '{tkn.lexeme}' en el ámbito '{scope}'"
         )
 
 
@@ -85,7 +85,7 @@ class Semantics:
 
         self.identifiers = ["-91", "-92", "-93"]
 
-        self.constants = ["-97", "-98", "-96"]
+        self.constants = ["-97", "-98", "-95"]
 
     def get_tokens(self):
         tokens = []

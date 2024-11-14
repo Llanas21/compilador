@@ -148,6 +148,18 @@ class IntermediateCode:
                 i = self.vci_else(i + 1)
                 continue
 
+            elif self.tokens[i].tkn == "-9":
+                self.stat_stack.append(self.tokens[i])
+                self.dir_stack.append(len(self.vci))
+                i = self.vci_while(i + 1)
+                continue
+
+            elif self.tokens[i].tkn == "-4":
+                self.stat_stack.append(self.tokens[i])
+                self.dir_stack.append(len(self.vci))
+                i = self.vci_do(i + 1)
+                continue
+
             i += 1
 
         vci_data = [
@@ -255,5 +267,109 @@ class IntermediateCode:
                     dir_value = self.dir_stack.pop()
                     self.vci[dir_value] = len(self.vci)
                     return i + 1
+
+            i += 1
+
+    def vci_while(self, i):
+        while i < len(self.tokens):
+            if self.tokens[i].tkn == "-51":
+                self.empty_op_stack()
+            elif (
+                self.tokens[i].tkn in self.identifiers
+                or self.tokens[i].tkn in self.constants
+            ):
+                self.vci.append(self.tokens[i])
+            elif (
+                self.tokens[i].lexeme in self.arithm_operators
+                or self.tokens[i].lexeme in self.relat_operators
+                or self.tokens[i].lexeme in self.log_operators
+            ):
+                op_stack_object = OpStackObject(
+                    tkn=self.tokens[i],
+                    priority=self.priorities_table.get(self.tokens[i].lexeme),
+                )
+
+                while (
+                    self.op_stack
+                    and op_stack_object.priority <= self.op_stack[-1].priority
+                ):
+                    self.vci.append(self.op_stack.pop().tkn)
+                self.op_stack.append(op_stack_object)
+
+            elif self.tokens[i].tkn == "-57":
+                self.empty_op_stack()
+                self.generate_empty_tkn()
+                self.vci.append(
+                    TokenClass(
+                        lexeme="mientras",
+                        tkn="-9",
+                        pos="-1",
+                        line=self.tokens[i].line,
+                    )
+                )
+
+            elif self.tokens[i].tkn == "-59":
+                element = self.stat_stack.pop()
+                if element.lexeme == "mientras":
+                    dir_value = self.dir_stack.pop()
+                    self.vci[dir_value] = len(self.vci) + 2
+                    dir_value = self.dir_stack.pop()
+                    self.vci.append(dir_value)
+                    self.vci.append(
+                        TokenClass(
+                            lexeme="endW",
+                            tkn=None,
+                            pos=None,
+                            line=None,
+                        )
+                    )
+                    return i + 1
+
+            i += 1
+
+    def vci_do(self, i):
+        while i < len(self.tokens):
+            if self.tokens[i].tkn == "-51":
+                self.empty_op_stack()
+            elif (
+                self.tokens[i].tkn in self.identifiers
+                or self.tokens[i].tkn in self.constants
+            ):
+                self.vci.append(self.tokens[i])
+            elif (
+                self.tokens[i].lexeme in self.arithm_operators
+                or self.tokens[i].lexeme in self.relat_operators
+                or self.tokens[i].lexeme in self.log_operators
+            ):
+                op_stack_object = OpStackObject(
+                    tkn=self.tokens[i],
+                    priority=self.priorities_table.get(self.tokens[i].lexeme),
+                )
+
+                while (
+                    self.op_stack
+                    and op_stack_object.priority <= self.op_stack[-1].priority
+                ):
+                    self.vci.append(self.op_stack.pop().tkn)
+                self.op_stack.append(op_stack_object)
+
+            elif self.tokens[i].tkn == "-59":
+                element = self.stat_stack.pop()
+                if element.lexeme == "haz":
+                    pass
+
+            elif self.tokens[i].tkn == "-57":
+                self.empty_op_stack()
+                dir_value = self.dir_stack.pop()
+                self.vci.append(dir_value)
+                self.vci.append(
+                    TokenClass(
+                        lexeme="finDo",
+                        tkn=None,
+                        pos=None,
+                        line=None,
+                    )
+                )
+                return i + 1
 
             i += 1

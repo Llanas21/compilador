@@ -83,6 +83,14 @@ class IntermediateCode:
 
         self.constants = ["-97", "-98", "-96"]
 
+    def empty_op_stack(self):
+        while self.op_stack:
+            self.vci.append(self.op_stack.pop().tkn)
+
+    def generate_empty_tkn(self):
+        self.vci.append(TokenClass(lexeme=None, tkn=None, pos=None, line=None))
+        self.dir_stack.append(len(self.vci) - 1)
+
     def get_tokens(self):
         tokens = []
         with open(self.file_path, "r") as file:
@@ -99,14 +107,18 @@ class IntermediateCode:
                 tokens.append(token)
         return tokens
 
-    def generate_vci(self, output_path):
-        for i in range(len(self.tokens)):
+    def generate_vci(self, i):
+
+        while i < len(self.tokens):
+            print(f"El ciclo de generate_vci se ejecuta {i + 1} veces")
+
             if (
                 self.tokens[i].tkn in self.identifiers
                 or self.tokens[i].tkn in self.constants
             ):
                 self.vci.append(self.tokens[i])
-            if (
+
+            elif (
                 self.tokens[i].lexeme in self.arithm_operators
                 or self.tokens[i].lexeme in self.relat_operators
                 or self.tokens[i].lexeme in self.log_operators
@@ -123,31 +135,45 @@ class IntermediateCode:
                     self.vci.append(self.op_stack.pop().tkn)
                 self.op_stack.append(op_stack_object)
 
-            if self.tokens[i].tkn == "-51":
-                while self.op_stack:
-                    self.vci.append(self.op_stack.pop().tkn)
+            elif self.tokens[i].tkn == "-51":
+                self.empty_op_stack()
 
-            if self.tokens[i].tkn == "-13":
-                self.vci_if(i=i)
+            elif self.tokens[i].tkn == "-13":
+                self.stat_stack.append(self.tokens[i])
+                i = self.vci_if(i + 1)
+                continue
 
-        vci_data = [[token.lexeme, index] for index, token in enumerate(self.vci)]
+            elif self.tokens[i].tkn == "-17":
+                self.stat_stack.append(self.tokens[i])
+                i = self.vci_else(i + 1)
+                continue
 
+            i += 1
+
+        vci_data = [
+            [element if isinstance(element, int) else element.lexeme, index]
+            for index, element in enumerate(self.vci)
+        ]
         vci_headers = ["tkn", "pos"]
-        with open(output_path + "vci.txt", "w") as file:
+        with open(
+            r"C:\Users\josel\Universidad\Lenguajes & Autómatas II\compilador\tables\\"
+            + "vci.txt",
+            "w",
+        ) as file:
             file.write(tabulate(vci_data, headers=vci_headers, tablefmt="simple"))
 
     def vci_if(self, i):
-        self.stat_stack.append(self.tokens[i])
+        while i < len(self.tokens):
+            print(f"El ciclo de vci_if se ejecuta {i + 1} veces")
 
-        for i in range(i, len(self.tokens)):
-            if self.tokens[i].tkn == "-56":
-                pass
-            if (
+            if self.tokens[i].tkn == "-51":
+                self.empty_op_stack()
+            elif (
                 self.tokens[i].tkn in self.identifiers
                 or self.tokens[i].tkn in self.constants
             ):
                 self.vci.append(self.tokens[i])
-            if (
+            elif (
                 self.tokens[i].lexeme in self.arithm_operators
                 or self.tokens[i].lexeme in self.relat_operators
                 or self.tokens[i].lexeme in self.log_operators
@@ -164,5 +190,70 @@ class IntermediateCode:
                     self.vci.append(self.op_stack.pop().tkn)
                 self.op_stack.append(op_stack_object)
 
-            if self.tokens[i].tkn == "-57":
-                
+            elif self.tokens[i].tkn == "-57":
+                self.empty_op_stack()
+                self.generate_empty_tkn()
+                self.vci.append(
+                    TokenClass(
+                        lexeme="si",
+                        tkn="-13",
+                        pos="-1",
+                        line=self.tokens[i].line,
+                    )
+                )
+
+            elif self.tokens[i].tkn == "-59":
+                element = self.stat_stack.pop()
+                if element.lexeme == "si":
+                    return i + 1
+
+            i += 1
+
+    def vci_else(self, i):
+        dir_value = self.dir_stack.pop()
+        self.vci[dir_value] = len(self.vci) + 2
+        self.generate_empty_tkn()
+        self.vci.append(
+            TokenClass(
+                lexeme="sino",
+                tkn="-17",
+                pos="-1",
+                line=self.tokens[i].line,
+            )
+        )
+
+        while i < len(self.tokens):
+            print(f"El ciclo de vci_else se ejecuta {i + 1} veces")
+
+            if self.tokens[i].tkn == "-51":
+                self.empty_op_stack()
+            elif (
+                self.tokens[i].tkn in self.identifiers
+                or self.tokens[i].tkn in self.constants
+            ):
+                self.vci.append(self.tokens[i])
+            elif (
+                self.tokens[i].lexeme in self.arithm_operators
+                or self.tokens[i].lexeme in self.relat_operators
+                or self.tokens[i].lexeme in self.log_operators
+            ):
+                op_stack_object = OpStackObject(
+                    tkn=self.tokens[i],
+                    priority=self.priorities_table.get(self.tokens[i].lexeme),
+                )
+
+                while (
+                    self.op_stack
+                    and op_stack_object.priority <= self.op_stack[-1].priority
+                ):
+                    self.vci.append(self.op_stack.pop().tkn)
+                self.op_stack.append(op_stack_object)
+
+            elif self.tokens[i].tkn == "-59":
+                element = self.stat_stack.pop()
+                if element.lexeme == "sino":
+                    dir_value = self.dir_stack.pop()
+                    self.vci[dir_value] = len(self.vci)
+                    return i + 1
+
+            i += 1

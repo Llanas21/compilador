@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 si ( x& > 20 + 3 ) {
@@ -5,6 +6,15 @@ si ( x& > 20 + 3 ) {
 } sino {
     x& = 30 - 10 ;
 }
+=======
+i& = 1 ;
+f& = 1 ;
+haz {
+    f& = f& * i& ;
+    i& = i& + 1 ;
+} mientras ( i& <= 2 ) ;
+
+>>>>>>> intermediate_code
 
 
 

@@ -120,7 +120,5 @@ class GUI:
         semantics = IntermediateCode(
             file_path=r"C:\Users\josel\Universidad\Lenguajes & Autómatas II\compilador\tables\tokens_table.txt"
         )
-        semantics.generate_vci(
-            r"C:\Users\josel\Universidad\Lenguajes & Autómatas II\compilador\tables\\"
-        )
+        semantics.generate_vci(0)
         messagebox.showinfo("Éxito", "Código intermedio completado sin errores.")

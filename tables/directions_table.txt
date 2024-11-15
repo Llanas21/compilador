@@ -1,2 +1,3 @@
-id    tkn    line    vci
-----  -----  ------  -----
+id                 tkn    line    vci
+---------------  -----  ------  -----
+areaRectamgulo@    -94       1      0

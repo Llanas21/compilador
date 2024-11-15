@@ -1,5 +1,5 @@
-id       tkn    value    d2    d1  ptr    scope
------  -----  -------  ----  ----  -----  -------
-suma&    -91        0     0     0
-i&       -91        0     0     0
-n&       -91        0     0     0
+id         tkn    value    d2    d1  ptr    scope
+-------  -----  -------  ----  ----  -----  ---------------
+base%      -92        0     0     0         areaRectamgulo@
+altura%    -92        0     0     0         areaRectamgulo@
+area%      -92        0     0     0         areaRectamgulo@

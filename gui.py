@@ -6,6 +6,7 @@ from semantics import (
     UndeclaredSymbolError,
 )
 from intermediate_code import IntermediateCode
+from execution import Execution
 import tkinter as tk
 from tkinter import filedialog, Menu, Text, Scrollbar, messagebox, END
 
@@ -57,6 +58,11 @@ class GUI:
             command=self.run_intermediate_code,
             accelerator="Ctrl+F3",
         )
+        menu_run.add_command(
+            label="Ejecutar programa",
+            command=self.run_execution,
+            accelerator="Ctrl+F5",
+        )
 
         self.master.bind_all("<Control-o>", lambda event: self.open_file())
         self.master.bind_all("<Control-s>", lambda event: self.save_file())
@@ -66,6 +72,7 @@ class GUI:
         self.master.bind_all("<Control-F1>", lambda event: self.run_lexicon())
         self.master.bind_all("<Control-F2>", lambda event: self.run_semantics())
         self.master.bind_all("<Control-F3>", lambda event: self.run_intermediate_code())
+        self.master.bind_all("<Control-F5>", lambda event: self.run_execution())
         self.master.bind_all("<Control-Q>", lambda event: self.master.quit())
 
     def open_file(self):
@@ -117,8 +124,15 @@ class GUI:
             messagebox.showerror("Error Semántico", str(e))
 
     def run_intermediate_code(self):
-        semantics = IntermediateCode(
+        intermediate_code = IntermediateCode(
             file_path=r"C:\Users\josel\Universidad\Lenguajes & Autómatas II\compilador\tables\tokens_table.txt"
         )
-        semantics.generate_vci()
+        intermediate_code.generate_vci()
         messagebox.showinfo("Éxito", "Código intermedio completado sin errores.")
+
+    def run_execution(self):
+        execution = Execution(
+            file_path=r"C:\Users\josel\Universidad\Lenguajes & Autómatas II\compilador\tables\vci.txt"
+        )
+        execution.execute()
+        messagebox.showinfo("Éxito", "Ejecución completada sin errores.")

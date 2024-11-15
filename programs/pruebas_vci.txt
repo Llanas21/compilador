@@ -1,48 +1,28 @@
-<<<<<<< HEAD
+var i& ;
+var n& ;
 
+leer ( i& ) ;
+leer ( n& ) ;
 
-si ( x& > 20 + 3 ) {
-    x& = 30 + 10 ;
-} sino {
-    x& = 30 - 10 ;
-}
-=======
-i& = 1 ;
-f& = 1 ;
+mientras ( i& == 7 ) {
 haz {
     f& = f& * i& ;
     i& = i& + 1 ;
+    leer ( n& ) ;
+
+    si ( i& < 2 ) {
+        escribir ( "Mayor" ) ;
+    } sino { 
+        i% = i% * 2 ;
+    }
+
+    mientras ( f& > 6 ) {
+        x% = 20 + 30 + 40 ;
+    }
 } mientras ( i& <= 2 ) ;
+}
 
->>>>>>> intermediate_code
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+escribir ( f& ) ;
 
 
 

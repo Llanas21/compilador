@@ -1,25 +1,23 @@
-programa sumaPares@ {
-    var suma& = 0 ;
-    var i& = 0 ;
-    var n& , m& ;
-    var cadena$ ;
-
-
-    leer ( n& ) ;
-    leer ( m& ) ;
-
-    i& = n& ;
-
-    mientras ( i& <= m& ) {
-        si ( i& % 2 == 0 ) {
-            suma& = suma& + 1 ;
-        }
-
-        i& = i& + 1 ;
+mientras ( i& <= m& ) {
+    si ( i& <= 2 ) {
+        i& = 0 ;
+	escribir ( n& ) ;
+    } sino {
+	i& = 1 ;
     }
 
-    escribir ( suma& ) ;
+    i& = n& + 1 ;
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

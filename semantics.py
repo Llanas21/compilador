@@ -245,8 +245,12 @@ class Semantics:
                 sym_table_object.value,
                 sym_table_object.d2,
                 sym_table_object.d1,
-                sym_table_object.ptr,
-                sym_table_object.scope,
+                sym_table_object.ptr if sym_table_object.ptr is not None else "null",
+                (
+                    sym_table_object.scope
+                    if sym_table_object.scope is not None
+                    else "null"
+                ),
             ]
             for sym_table_object in self.sym_table_objects
         ]

@@ -1,5 +1,6 @@
-id         tkn    value    d2    d1  ptr    scope
--------  -----  -------  ----  ----  -----  ---------------
-base%      -92        0     0     0         areaRectamgulo@
-altura%    -92        0     0     0         areaRectamgulo@
-area%      -92        0     0     0         areaRectamgulo@
+id      tkn    value    d2    d1  ptr    scope
+----  -----  -------  ----  ----  -----  -------
+x&      -91     25       0     0  null   prueba@
+y%      -92      3.5     0     0  null   prueba@
+z&      -91      3       0     0  null   prueba@
+num&    -91      0       0     0  null   prueba@

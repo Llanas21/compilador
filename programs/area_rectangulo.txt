@@ -1,17 +1,12 @@
 programa areaRectamgulo@ { 
     var base% ;
     var altura% ;
-    var area% ;  
+    var area% ;
     leer ( base% ) ;
     leer ( altura% ) ;
 
     area% = base% * altura% ;
+    escribir ( "El_area_del_rectangulo_es" ) ;
     escribir ( area% ) ;
 }
-
-
-
-
-
-
 

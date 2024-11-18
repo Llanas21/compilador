@@ -85,7 +85,15 @@ class Execution:
             ),
             -1,
         )
-        return int(self.sym_table_objects[index].value)
+        # try:
+        #     value = int(self.sym_table_objects[index].value)
+        # except:
+        #     value = float(self.sym_table_objects[index].value)
+
+        if self.int_id_patt.fullmatch(id):
+            return int(self.sym_table_objects[index].value)
+        elif self.real_id_patt.fullmatch(id):
+            return float(self.sym_table_objects[index].value)
 
     def get_vci(self):
         vci = []
@@ -161,6 +169,7 @@ class Execution:
                         multiplicand = self.get_id_value(multiplicand)
 
                     result = multiplicand * multiplier
+                    print(result)
                     self.exec_stack.append(result)
 
                 elif self.vci[i] == "/":

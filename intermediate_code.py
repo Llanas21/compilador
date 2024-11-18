@@ -194,9 +194,6 @@ class IntermediateCode:
 
     def vci_if(self, i):
         while i < len(self.tokens):
-            print(
-                f"Al if le pasan los siguientes tokens {self.tokens[i].lexeme} num. tkn. {self.tokens[i].tkn}"
-            )
 
             if (
                 self.tokens[i].tkn in self.identifiers

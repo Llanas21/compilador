@@ -17,3 +17,23 @@ programa factorial@ {
   escribir ( resultado& ) ;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

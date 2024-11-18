@@ -1,6 +1,8 @@
 import re
 from tabulate import tabulate
 from models.sym_table_object import SymTableObject
+import tkinter as tk
+from tkinter import messagebox
 
 
 class DivisionByZero(Exception):
@@ -45,6 +47,13 @@ class Execution:
             "sino",
             "mientras",
             "haz",
+            "finW",
+            "finDo",
+        ]
+
+        self.methods = [
+            "leer",
+            "escribir",
         ]
 
         self.identifiers = ["-91", "-92", "-93"]
@@ -76,7 +85,7 @@ class Execution:
             ),
             -1,
         )
-        return self.sym_table_objects[index].value
+        return int(self.sym_table_objects[index].value)
 
     def get_vci(self):
         vci = []
@@ -140,6 +149,7 @@ class Execution:
                 or self.vci[i] in self.relat_operators
                 or self.vci[i] in self.log_operators
                 or self.vci[i] in self.statutes
+                or self.vci[i] in self.methods
             ):
                 if self.vci[i] == "*":
 
@@ -149,6 +159,7 @@ class Execution:
                     multiplicand = self.exec_stack.pop()
                     if self.is_identifier(multiplicand):
                         multiplicand = self.get_id_value(multiplicand)
+
                     result = multiplicand * multiplier
                     self.exec_stack.append(result)
 
@@ -201,8 +212,9 @@ class Execution:
 
                 elif self.vci[i] == "=":
                     value = self.exec_stack.pop()
+                    if self.is_identifier(value):
+                        value = self.get_id_value(value)
                     identifier = self.exec_stack.pop()
-                    print(f"El valor de {identifier} es {value}")
                     index = next(
                         (
                             index
@@ -214,26 +226,20 @@ class Execution:
                         -1,
                     )
 
-                    print(index)
                     self.sym_table_objects[index].value = value
 
                 if self.vci[i] == "<":
-
                     right = self.exec_stack.pop()
-                    print(
-                        f"El valor que retorna is_identifier es {self.is_identifier(right)}"
-                    )
 
                     if self.is_identifier(right):
                         right = self.get_id_value(right)
                     left = self.exec_stack.pop()
 
                     if self.is_identifier(left):
-                        print("Si lo detecta como ID")
 
                         left = self.get_id_value(left)
+
                     result = 1 if left < right else 0
-                    print(f"Lo que se mete a la pila es {result}")
                     self.exec_stack.append(result)
 
                 elif self.vci[i] == "<=":
@@ -320,6 +326,34 @@ class Execution:
                     result = 1 if (left or right) else 0
                     self.exec_stack.append(result)
 
+                elif self.vci[i] == "leer":
+
+                    identifier = self.exec_stack.pop()
+                    value = input(f"Ingresa el valor para {identifier}: ")
+
+                    index = next(
+                        (
+                            index
+                            for index, sym_table_object in enumerate(
+                                self.sym_table_objects
+                            )
+                            if sym_table_object.id == identifier
+                        ),
+                        -1,
+                    )
+
+                    self.sym_table_objects[index].value = value
+
+                elif self.vci[i] == "escribir":
+
+                    param = self.exec_stack.pop()
+
+                    if self.is_identifier(param):
+                        value = self.get_id_value(param)
+                        print(value)
+                    else:
+                        print(param)
+
                 elif self.vci[i] == "si":
                     dir_value = self.exec_stack.pop()
                     truth_value = self.exec_stack.pop()
@@ -328,6 +362,35 @@ class Execution:
                         continue
                     else:
                         i = dir_value
+                        continue
+
+                elif self.vci[i] == "sino":
+                    dir_value = self.exec_stack.pop()
+                    i = dir_value
+
+                elif self.vci[i] == "mientras":
+                    dir_value = self.exec_stack.pop()
+                    truth_value = self.exec_stack.pop()
+                    if truth_value == 1:
+                        i += 1
+                        continue
+                    else:
+                        i = dir_value
+                        continue
+
+                elif self.vci[i] == "finW":
+                    dir_value = self.exec_stack.pop()
+                    i = dir_value
+                    continue
+
+                elif self.vci[i] == "finDo":
+                    dir_value = self.exec_stack.pop()
+                    truth_value = self.exec_stack.pop()
+                    if truth_value == 1:
+                        i = dir_value
+                        continue
+                    else:
+                        i += 1
                         continue
 
             else:

@@ -1,6 +1,5 @@
-id      tkn    value    d2    d1  ptr    scope
-----  -----  -------  ----  ----  -----  -------
-x&      -91     25       0     0  null   prueba@
-y%      -92      3.5     0     0  null   prueba@
-z&      -91      3       0     0  null   prueba@
-num&    -91      0       0     0  null   prueba@
+id            tkn    value    d2    d1  ptr    scope
+----------  -----  -------  ----  ----  -----  ----------
+n&            -91        6     0     0  null   factorial@
+resultado&    -91      720     0     0  null   factorial@
+i&            -91        7     0     0  null   factorial@

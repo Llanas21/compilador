@@ -169,7 +169,6 @@ class Execution:
                         multiplicand = self.get_id_value(multiplicand)
 
                     result = multiplicand * multiplier
-                    print(result)
                     self.exec_stack.append(result)
 
                 elif self.vci[i] == "/":
